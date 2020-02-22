@@ -795,11 +795,6 @@ type (
 		CountryCode  string `json:"country_code,omitempty"`
 	}
 
-	// Name struct
-	Name struct {
-		FullName string `json:"full_name,omitempty"`
-	}
-
 	// ShippingDetail struct
 	ShippingDetail struct {
 		Name    *Name                          `json:"name,omitempty"`
@@ -983,6 +978,143 @@ type (
 	Consent struct {
 		Type    string `json:"type"`
 		Granted bool   `json:"granted"`
+	}
+
+	LinkDescription struct {
+		Href   string `json:"href"`
+		Rel    string `json:"rel"`
+		Method string `json:"method,omitempty"`
+	}
+
+	PricingScheme struct {
+		Version    int        `json:"version,omitempty"`
+		FixedPrice *Money     `json:"fixed_price,omitempty"`
+		CreateTime *time.Time `json:"create_time,omitempty"`
+		UpdateTime *time.Time `json:"update_time,omitempty"`
+	}
+
+	Frequency struct {
+		IntervalUnit  string `json:"interval_unit"`
+		IntervalCount int    `json:"interval_count,omitempty"`
+	}
+
+	BillingCycle struct {
+		PricingScheme *PricingScheme `json:"pricing_scheme,omitempty"`
+		Frequency     Frequency      `json:"frequency"`
+		TenureType    string         `json:"tenure_type"`
+		Sequence      int            `json:"sequence"`
+		TotalCycles   int            `json:"total_cycles"`
+	}
+
+	PaymentPreferences struct {
+		AutoBillOutstanding     bool   `json:"auto_bill_outstanding,omitempty"`
+		SetupFee                *Money `json:"setup_fee,omitempty"`
+		SetupFeeFailureAction   string `json:"setup_fee_failure_action,omitempty"`
+		PaymentFailureThreshold int    `json:"payment_failure_threshold,omitempty"`
+	}
+
+	Taxes struct {
+		Percentage string `json:"percentage"`
+		Inclusive  bool   `json:"inclusive,omitempty"`
+	}
+
+	Plan struct {
+		ID                 string             `json:"id"`
+		ProductID          string             `json:"product_id"`
+		Name               string             `json:"name"`
+		Description        string             `json:"description"`
+		Status             string             `json:"status"`
+		BillingCycles      []BillingCycle     `json:"billing_cycles"`
+		PaymentPreferences PaymentPreferences `json:"payment_preferences"`
+		Taxes              Taxes              `json:"taxes"`
+		CreateTime         *time.Time         `json:"create_time,omitempty"`
+		UpdateTime         *time.Time         `json:"update_time,omitempty"`
+		Links              []LinkDescription  `json:"links"`
+	}
+
+	Name struct {
+		Prefix            string `json:"prefix,omitempty"`
+		GivenName         string `json:"given_name,omitempty"`
+		Surname           string `json:"surname,omitempty"`
+		MiddleName        string `json:"middle_name,omitempty"`
+		Suffix            string `json:"suffix,omitempty"`
+		AlternateFullName string `json:"alternate_full_name,omitempty"`
+		FullName          string `json:"full_name,omitempty"`
+	}
+
+	Subscriber struct {
+		Name            Name   `json:"name,omitempty"`
+		EmailAddress    string `json:"email_address,omitempty"`
+		PayerID         string `json:"payer_id,omitempty"`
+		ShippingAddress string `json:"shipping_address,omitempty"`
+	}
+
+	LastPaymentDetails struct {
+		Amount *Money     `json:"amount"`
+		Time   *time.Time `json:"time,omitempty"`
+	}
+
+	CycleExecution struct {
+		TenureType                  string `json"tenure_type,omitempty"`
+		Sequence                    int    `json:"sequence"`
+		CyclesCompleted             int    `json:"cycles_completed"`
+		CyclesRemaining             int    `json:"cycles_remaining,omitempty"`
+		CurrentPricingSchemeVersion int    `json:"current_pricing_scheme_version,omitempty"`
+		TotalCycles                 int    `json:"total_cycles,omitempty"`
+	}
+
+	FailedPaymentDetails struct {
+		Amount               *Money     `json:"amount"`
+		Time                 *time.Time `json:"time,omitempty"`
+		ReasonCode           string     `json:"reason_code,omitempty"`
+		NextPaymentRetryTime *time.Time `json:"next_payment_retry_time,omitempty"`
+	}
+
+	SubscriptionBillingInfo struct {
+		OutstandingBalance  *Money                `json:"outstanding_balance,omitempty"`
+		CycleExecutions     []CycleExecution      `json:"cycle_executions"`
+		LastPayment         LastPaymentDetails    `json:"last_payment,omitempty"`
+		NextBillingTime     *time.Time            `json:"next_billing_time,omitempty"`
+		FinalPaymentTime    *time.Time            `json:"final_payment_time,omitempty"`
+		FailedPaymentsCount int                   `json:"failed_payments_count"`
+		LastFailedPayment   *FailedPaymentDetails `json:"last_failed_payment"`
+	}
+
+	Subscription struct {
+		Status           string                  `json:"status"`
+		StatusChangeNote string                  `json:"status_change_note,omitempty"`
+		StatusUpdateTime *time.Time              `json:"status_update_time,omitempty"`
+		ID               string                  `json:"id"`
+		PlanID           string                  `json:"plan_id"`
+		StartTime        *time.Time              `json:"start_time,omitempty"`
+		Quantity         string                  `json:"quantity"`
+		ShippingAmount   *Money                  `json:"shipping_amount,omitempty"`
+		Subscriber       *Subscriber             `json:"subscriber,omitempty"`
+		BillingInfo      SubscriptionBillingInfo `json:"billing_info,omitempty"`
+		CreateTime       *time.Time              `json:"create_time,omitempty"`
+		UpdateTime       *time.Time              `json:"update_time,omitempty"`
+		Links            []LinkDescription       `json:"links"`
+	}
+
+	ReasonedRequest struct {
+		Reason string `json:"reason"`
+	}
+
+	AmountWithBreakdown struct {
+		GrossAmount    Money  `json:"gross_amount"`
+		FeeAmount      *Money `json:"fee_amount,omitempty"`
+		ShippingAmount *Money `json:"shipping_amount,omitempty"`
+		TaxAmount      *Money `json:"tax_amount,omitempty"`
+		NetAmount      Money  `json:"net_amount"`
+	}
+
+	SubscriptionTransaction struct {
+		Status              string              `json:"status"`
+		ID                  string              `json:"id"`
+		AmountWithBreakdown AmountWithBreakdown `json:"amount_with_breakdown"`
+		PayerName           *Name               `json:"payer_name,omitempty"`
+		PayerEmail          string              `json:"payer_email,omitempty"`
+		Time                *time.Time          `json:"time,omitempty"`
 	}
 )
 
